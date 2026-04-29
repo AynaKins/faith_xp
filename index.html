@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>faith OS</title>
+  <meta name="description" content="Маленькая старая ОС, собранная из чувств, Тошика, звёздочек и мягких интерактивов.">
+  <meta name="theme-color" content="#245edb">
+  <meta property="og:title" content="faith OS">
+  <meta property="og:description" content="Старая ОС для одного человека: письма, Тошик, звёзды, анти-твимс и много маленьких окон.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <canvas id="fxCanvas" aria-hidden="true"></canvas>
+
+  <section class="boot" id="boot" aria-label="Загрузка faith OS">
+    <div class="boot-box">
+      <div class="boot-logo"><span>faith</span><b>OS</b></div>
+      <p id="bootLine">initializing feelings.sys...</p>
+      <div class="boot-progress"><i id="bootProgress"></i></div>
+      <button id="skipBoot" type="button">пропустить загрузку</button>
+    </div>
+  </section>
+
+  <main class="desktop" id="desktop" aria-label="Рабочий стол faith OS">
+    <div class="wallpaper">
+      <div class="wallpaper-photo photo-a" role="img" aria-label="Парное изображение на обоях"></div>
+      <div class="wallpaper-photo photo-b" role="img" aria-label="Второе парное изображение на обоях"></div>
+      <div class="xp-hill"></div>
+      <div class="wallpaper-copy">
+        <span>faith OS</span>
+        <strong>safe mode for her</strong>
+      </div>
+    </div>
+
+    <section class="desktop-icons" aria-label="Ярлыки рабочего стола">
+      <button class="desktop-icon" data-open="letter" type="button"><span>📄</span><b>Мои чувства.txt</b></button>
+      <button class="desktop-icon" data-open="tosha" type="button"><span>🐱</span><b>Тошик.exe</b></button>
+      <button class="desktop-icon" data-open="messenger" type="button"><span>💬</span><b>Принцесса Messenger</b></button>
+      <button class="desktop-icon" data-open="stars" type="button"><span>⭐</span><b>Баночка звёзд.exe</b></button>
+      <button class="desktop-icon" data-open="twims" type="button"><span>🛡️</span><b>AntiTwims.exe</b></button>
+      <button class="desktop-icon" data-open="cmd" type="button"><span>🖥️</span><b>heart.cmd</b></button>
+      <button class="desktop-icon" data-open="player" type="button"><span>🎵</span><b>faith Player</b></button>
+      <button class="desktop-icon" data-open="photos" type="button"><span>🖼️</span><b>Фотообои</b></button>
+      <button class="desktop-icon" data-open="dreams" type="button"><span>🌙</span><b>Сны.scr</b></button>
+      <button class="desktop-icon" data-open="coupon" type="button"><span>🎫</span><b>Купон.bat</b></button>
+      <button class="desktop-icon" data-open="bin" type="button"><span>🗑️</span><b>Корзина тревог</b></button>
+    </section>
+
+    <div class="window-area" id="windowArea" aria-live="polite"></div>
+
+    <aside class="desktop-widget xp-panel" id="progressWidget">
+      <div class="xp-panel-title">status</div>
+      <p>открыто: <b id="doneCount">0</b>/<b id="totalCount">11</b></p>
+      <div class="tiny-progress"><i id="globalBar"></i></div>
+      <small id="globalHint">можно просто тыкать ярлыки</small>
+    </aside>
+  </main>
+
+  <footer class="taskbar" id="taskbar" aria-label="Панель задач">
+    <button class="start-button" id="startButton" type="button"><span>⊞</span>Пуск</button>
+    <div class="task-list" id="taskList"></div>
+    <div class="tray">
+      <button class="tray-btn" id="soundToggle" type="button" aria-pressed="false">🔈</button>
+      <time id="clock">00:00</time>
+    </div>
+  </footer>
+
+  <nav class="start-menu" id="startMenu" aria-label="Меню Пуск">
+    <div class="start-head">
+      <div class="user-tile">F</div>
+      <div><b>faith</b><span>local account</span></div>
+    </div>
+    <div class="start-grid">
+      <button data-open="letter" type="button">📄 Мои чувства</button>
+      <button data-open="tosha" type="button">🐱 Тошик</button>
+      <button data-open="messenger" type="button">💬 Написать ей</button>
+      <button data-open="twims" type="button">🛡️ Анти-твимс</button>
+      <button data-open="stars" type="button">⭐ Звёзды</button>
+      <button data-open="cmd" type="button">🖥️ cmd heart</button>
+      <button data-open="player" type="button">🎵 faith Player</button>
+      <button data-action="reset" type="button">♻️ Сбросить прогресс</button>
+      <button data-action="shutdown" type="button">🌙 Спокойной ночки</button>
+    </div>
+  </nav>
+
+  <template id="tpl-letter">
+    <div class="notepad">
+      <div class="notepad-menu">Файл&nbsp;&nbsp;Правка&nbsp;&nbsp;Формат&nbsp;&nbsp;Вид&nbsp;&nbsp;Справка</div>
+      <div class="notepad-paper">
+        <button class="xp-button small" id="typeLetter" type="button">напечатать нормально</button>
+        <pre id="letterText"></pre>
+      </div>
+    </div>
+  </template>
+
+  <template id="tpl-tosha">
+    <div class="tosha-app">
+      <div class="tosha-room">
+        <div class="stove"><div class="fire"></div></div>
+        <button class="tosha-cat" id="toshaCat" type="button" aria-label="Погладить Тошика">
+          <span class="cat-face">🐱</span>
+          <span class="cat-shadow"></span>
+        </button>
+        <div class="toast-bubbles" id="toshaBubbles"></div>
+      </div>
+      <div class="app-side">
+        <h3>Тошик на печке</h3>
+        <p id="toshaLine">Погладь Тошика. Он тут не просто так: он охраняет уют.</p>
+        <div class="meter"><i id="toshaMeter"></i></div>
+        <div class="button-row">
+          <button class="xp-button" data-tosha="pet" type="button">погладить</button>
+          <button class="xp-button" data-tosha="feed" type="button">дать вкусняшку</button>
+          <button class="xp-button" data-tosha="warm" type="button">подкинуть дров</button>
+          <button class="xp-button" data-tosha="comb" type="button">почесать за ушком</button>
+          <button class="xp-button" data-tosha="guard" type="button">попросить охранять</button>
+          <button class="xp-button" data-tosha="sleep" type="button">уложить</button>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <template id="tpl-messenger">
+    <div class="messenger-app">
+      <div class="chat-head"><span class="avatar">F</span><div><b>faith</b><small>пишет тебе мягко и без давления</small></div></div>
+      <div class="chat-log" id="chatLog"></div>
+      <div class="quick-replies" id="quickReplies"></div>
+    </div>
+  </template>
+
+  <template id="tpl-stars">
+    <div class="stars-app">
+      <div class="stars-zone" id="starsZone" aria-label="звёзды для баночки"></div>
+      <div class="star-jar" id="starJar"><div class="jar-lid"></div><div class="jar-body"><b id="jarNum">0</b><span>из 8</span></div></div>
+      <div class="star-reward" id="starReward" aria-live="polite"></div>
+      <p id="starsLine">Перетащи звёзды в баночку или просто нажимай на них.</p>
+    </div>
+  </template>
+
+  <template id="tpl-twims">
+    <div class="twims-app">
+      <div class="twims-top"><p>Задача: не дать твимсу испортить настроение.</p><button class="xp-button" id="twimsStart" type="button">старт</button></div>
+      <div class="twims-field" id="twimsField"></div>
+      <div class="twims-status"><span>сбито: <b id="twimsScore">0</b>/15</span><span id="twimsLine">щит спит</span></div>
+    </div>
+  </template>
+
+  <template id="tpl-cmd">
+    <div class="cmd-app">
+      <pre id="cmdOutput"></pre>
+      <div class="cmd-input"><span>C:\faith&gt;</span><input id="cmdInput" autocomplete="off" spellcheck="false" aria-label="команда"></div>
+      <div class="cmd-help">команды: help, heart, morning, sleep, twims, tosha, letter, clear</div>
+    </div>
+  </template>
+
+  <template id="tpl-player">
+    <div class="player-app">
+      <div class="player-screen">
+        <div class="player-disc" id="playerDisc">♪</div>
+        <div>
+          <h3 id="trackTitle">faith Player</h3>
+          <p id="trackHint">Плейлист загружается из assets/tracks/playlist.json.</p>
+        </div>
+      </div>
+      <audio id="audioPlayer" controls preload="metadata"></audio>
+      <div class="button-row">
+        <button class="xp-button" id="prevTrack" type="button">назад</button>
+        <button class="xp-button" id="playTrack" type="button">play</button>
+        <button class="xp-button" id="nextTrack" type="button">дальше</button>
+      </div>
+      <div class="playlist" id="playlist"></div>
+    </div>
+  </template>
+
+  <template id="tpl-photos">
+    <div class="photos-app">
+      <div class="photo-frame"><img id="photoView" alt="парное изображение" src="./assets/couple-wide.jpg"></div>
+      <div class="button-row"><button class="xp-button" data-photo="wide" type="button">кадр 1</button><button class="xp-button" data-photo="close" type="button">кадр 2</button><button class="xp-button" id="setWallpaper" type="button">поставить на обои</button></div>
+      <p>Сделал так, чтобы они были не просто картинками, а частью старого рабочего стола.</p>
+    </div>
+  </template>
+
+  <template id="tpl-dreams">
+    <div class="dreams-app" id="dreamsApp">
+      <canvas id="dreamCanvas"></canvas>
+      <div class="dream-copy"><h3>Сны.scr</h3><p id="dreamLine">самые крутые сны без тебя не запускаются</p><button class="xp-button" id="nextDream" type="button">ещё один сон</button></div>
+    </div>
+  </template>
+
+  <template id="tpl-coupon">
+    <div class="coupon-app">
+      <div class="coupon-card">
+        <h3>Купон без срока действия</h3>
+        <p id="couponText">Выбери, какой режим нужен.</p>
+        <div class="coupon-options" id="couponOptions"></div>
+      </div>
+      <div class="coupon-printer"><div class="paper" id="couponPaper">готов к печати</div><button class="xp-button" id="printCoupon" type="button">напечатать</button></div>
+    </div>
+  </template>
+
+  <template id="tpl-bin">
+    <div class="bin-app">
+      <div class="bin-list" id="binList"></div>
+      <button class="xp-button" id="emptyBin" type="button">очистить корзину тревог</button>
+      <p id="binLine">Здесь лежит то, что не должно портить тёплое.</p>
+    </div>
+  </template>
+
+  <div class="shutdown" id="shutdown"><div><h2>Теперь можно спатки</h2><p>faith OS сохранит всё тёплое до следующего запуска.</p><button class="xp-button" id="wakeAgain" type="button">вернуться</button></div></div>
+
+  <section class="final-error" id="finalError" aria-live="polite" aria-label="Непредвиденная ошибка faith OS">
+    <div class="final-error-inner">
+      <p class="error-code">faith OS unexpected error</p>
+      <h2>слишком красивая принцесса</h2>
+      <p id="finalErrorLine">система пытается обработать уровень милоты...</p>
+      <div class="error-count" id="finalCountdown">3</div>
+      <pre id="final404">404: сомнения не найдены</pre>
+    </div>
+    <button class="final-reboot" id="finalReboot" type="button">перезагрузить OS</button>
+  </section>
+
+  <script src="./data.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>

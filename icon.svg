@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#5fa9ff"/><stop offset=".45" stop-color="#245edb"/><stop offset="1" stop-color="#3ca423"/></linearGradient></defs>
+  <rect width="128" height="128" rx="24" fill="url(#g)"/>
+  <path d="M26 63c18-30 51-30 38 1 25-28 51-6 25 24-17 20-42 28-42 28S15 88 26 63z" fill="#fff" opacity=".92"/>
+  <text x="65" y="46" text-anchor="middle" font-family="Georgia" font-style="italic" font-size="28" fill="#fff">faith</text>
+</svg>
